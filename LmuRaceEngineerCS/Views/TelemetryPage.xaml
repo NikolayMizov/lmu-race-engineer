@@ -1,0 +1,389 @@
+<UserControl x:Class="LmuRaceEngineerCS.Views.TelemetryPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:LmuRaceEngineerCS.Controls"
+             Background="{StaticResource BgApp}">
+
+    <UserControl.Resources>
+        <Style x:Key="Kpi" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="MinHeight" Value="128"/>
+            <Setter Property="Margin" Value="0,0,12,0"/>
+        </Style>
+        <Style x:Key="PopBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="6,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="ToolTip" Value="Pop out to a window"/>
+        </Style>
+        <Style x:Key="KpiKey" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20,16">
+
+            <!-- ===== KPI ROW ===== -->
+            <UniformGrid Rows="1" Columns="6">
+                <Border Style="{StaticResource Kpi}">
+                    <Grid>
+                        <Border Style="{StaticResource AccentBar}"/>
+                        <StackPanel Margin="15,14">
+                            <TextBlock Text="POSITION" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock x:Name="TbPos" Text="P—" Style="{StaticResource BigNumber}" FontSize="46" Margin="0,6,0,0"/>
+                            <TextBlock x:Name="TbPosNote" Text="" Foreground="{StaticResource RedBrush}" FontWeight="SemiBold" FontSize="14" Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Style="{StaticResource Kpi}">
+                    <StackPanel Margin="15,14">
+                        <TextBlock Text="LAP" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock x:Name="TbLap" Text="—" Style="{StaticResource BigNumber}" FontSize="46" Margin="0,6,0,0"/>
+                        <TextBlock x:Name="TbLapTotal" Text="" Foreground="{StaticResource Text3}" FontSize="14" Margin="0,8,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Kpi}">
+                    <Grid>
+                        <Border Style="{StaticResource AccentBar}"/>
+                        <StackPanel Margin="15,14">
+                            <TextBlock Text="GAP AHEAD" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock x:Name="TbGapAhead" Text="—" Style="{StaticResource BigNumber}" FontSize="34" Foreground="{StaticResource AccentBrush}" Margin="0,6,0,0"/>
+                            <Grid Margin="0,8,0,0">
+                                <TextBlock Text="PER LAP" Style="{StaticResource KpiKey}"/>
+                                <TextBlock x:Name="TbGapAheadDelta" Text="—" Style="{StaticResource Mono}" FontSize="12" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Grid Margin="0,2,0,0">
+                                <TextBlock Text="5-LAP" Style="{StaticResource KpiKey}"/>
+                                <TextBlock x:Name="TbGapAheadAvg5" Text="—" Style="{StaticResource Mono}" FontSize="12" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Style="{StaticResource Kpi}">
+                    <Grid>
+                        <Border Style="{StaticResource AccentBar}" Background="{StaticResource RedBrush}"/>
+                        <StackPanel Margin="15,14">
+                            <TextBlock Text="GAP BEHIND" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock x:Name="TbGapBehind" Text="—" Style="{StaticResource BigNumber}" FontSize="34" Foreground="{StaticResource RedBrush}" Margin="0,6,0,0"/>
+                            <Grid Margin="0,8,0,0">
+                                <TextBlock Text="PER LAP" Style="{StaticResource KpiKey}"/>
+                                <TextBlock x:Name="TbGapBehindDelta" Text="—" Style="{StaticResource Mono}" FontSize="12" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Grid Margin="0,2,0,0">
+                                <TextBlock Text="5-LAP" Style="{StaticResource KpiKey}"/>
+                                <TextBlock x:Name="TbGapBehindAvg5" Text="—" Style="{StaticResource Mono}" FontSize="12" Foreground="{StaticResource RedBrush}" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Style="{StaticResource Kpi}">
+                    <Grid>
+                        <Border Style="{StaticResource AccentBar}"/>
+                        <StackPanel Margin="15,14">
+                            <TextBlock Text="PIT WINDOW" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock x:Name="TbPitWnd" Text="—" Style="{StaticResource BigNumber}" FontSize="26" Margin="0,8,0,0"/>
+                            <TextBlock Text="RECOMMENDED" Foreground="{StaticResource Text3}" FontSize="13" Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Style="{StaticResource Kpi}" Margin="0">
+                    <StackPanel Margin="15,14">
+                        <TextBlock Text="FASTER CLASS" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock x:Name="TbFClass" Text="—" Style="{StaticResource BigNumber}" FontSize="22" Foreground="{StaticResource GreenBrush}" Margin="0,10,0,0"/>
+                        <TextBlock Text="TRAFFIC" Foreground="{StaticResource Text3}" FontSize="13" Margin="0,8,0,0"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- ===== DELTA STRIP ===== -->
+            <UniformGrid Rows="1" Columns="5" Margin="0,12,0,0">
+                <Border Style="{StaticResource Panel}" Margin="0,0,12,0">
+                    <StackPanel Margin="18,14" HorizontalAlignment="Center">
+                        <TextBlock Text="Δ BEST" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="TbDBest" Text="—" Style="{StaticResource BigNumber}" FontSize="22" Foreground="{StaticResource AccentBrush}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Panel}" Margin="0,0,12,0">
+                    <StackPanel Margin="18,14" HorizontalAlignment="Center">
+                        <TextBlock Text="Δ LAST" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="TbDLast" Text="—" Style="{StaticResource BigNumber}" FontSize="22" Foreground="{StaticResource RedBrush}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Panel}" Margin="0,0,12,0">
+                    <StackPanel Margin="18,14" HorizontalAlignment="Center">
+                        <TextBlock Text="STINT LAP" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="TbStintLap" Text="—" Style="{StaticResource BigNumber}" FontSize="22" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Panel}" Margin="0,0,12,0">
+                    <StackPanel Margin="18,14" HorizontalAlignment="Center">
+                        <TextBlock Text="LAST" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="TbLastLap" Text="—" Style="{StaticResource BigNumber}" FontSize="22" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Panel}" Margin="0">
+                    <StackPanel Margin="18,14" HorizontalAlignment="Center">
+                        <TextBlock Text="BEST" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="TbBestLap" Text="—" Style="{StaticResource BigNumber}" FontSize="22" Foreground="{StaticResource AccentBrush}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- hidden stint-time holder (kept for functionality) -->
+            <TextBlock x:Name="TbStintTime" Visibility="Collapsed"/>
+
+            <!-- ===== ENERGY / TYRES / PIT ===== -->
+            <Grid Margin="0,12,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.1*"/><ColumnDefinition Width="1.3*"/><ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Energy -->
+                <ctl:ResizableDataBox WidgetId="tel-energy" Grid.Column="0" Margin="0,0,14,0">
+                <Border Style="{StaticResource Card}">
+                    <Grid>
+                        <Border Style="{StaticResource AccentBar}"/>
+                        <StackPanel Margin="18,16">
+                            <Grid>
+                                <TextBlock Text="ENERGY STRATEGY" Style="{StaticResource SectionTitle}" HorizontalAlignment="Left"/>
+                                <Button Style="{StaticResource PopBtn}" Content="⤢" Tag="fuel" Click="PopOut_Click"/>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                <TextBlock x:Name="TbFuelLaps" Text="—" Style="{StaticResource BigNumber}" FontSize="44"/>
+                                <TextBlock Text="FUEL LAPS LEFT" Foreground="{StaticResource Text3}" FontSize="14" VerticalAlignment="Bottom" Margin="10,0,0,8"/>
+                            </StackPanel>
+                            <Border Background="{StaticResource BgInset}" Height="8" Margin="0,10,0,0" CornerRadius="3" HorizontalAlignment="Stretch">
+                                <Rectangle x:Name="FuelBar" Height="8" HorizontalAlignment="Left" RadiusX="3" RadiusY="3" Fill="{StaticResource AccentBrush}"/>
+                            </Border>
+                            <UniformGrid Rows="1" Columns="3" Margin="0,14,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="VE LEFT" Style="{StaticResource Caption}"/>
+                                    <TextBlock x:Name="TbVeRem" Text="—" Style="{StaticResource Mono}" FontSize="17" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="PER LAP" Style="{StaticResource Caption}"/>
+                                    <TextBlock x:Name="TbPerLap" Text="—" Style="{StaticResource Mono}" FontSize="17" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="EXTRA STOPS" Style="{StaticResource Caption}"/>
+                                    <TextBlock x:Name="TbExtraStops" Text="0" Style="{StaticResource Mono}" FontSize="17" FontWeight="Bold"/>
+                                </StackPanel>
+                            </UniformGrid>
+                            <UniformGrid Rows="1" Columns="3" Margin="0,10,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="3-LAP" Style="{StaticResource Caption}"/>
+                                    <TextBlock x:Name="TbAvg3" Text="—" Style="{StaticResource Mono}" FontSize="14" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="10-LAP" Style="{StaticResource Caption}"/>
+                                    <TextBlock x:Name="TbAvg10" Text="—" Style="{StaticResource Mono}" FontSize="14" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="SAVE TGT" Style="{StaticResource Caption}"/>
+                                    <TextBlock x:Name="TbSaveTgt" Text="OK" Style="{StaticResource Mono}" FontSize="14" FontWeight="Bold" Foreground="{StaticResource GreenBrush}"/>
+                                </StackPanel>
+                            </UniformGrid>
+                            <Border BorderBrush="{StaticResource Border3}" BorderThickness="0,1,0,0" Margin="0,12,0,0" Padding="0,10,0,0">
+                                <StackPanel>
+                                    <TextBlock x:Name="TbFuelStrat" Text="—" FontSize="14" Foreground="{StaticResource GreenBrush}" TextWrapping="Wrap"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                        <TextBlock x:Name="TbSoC" Text="" Style="{StaticResource Mono}" FontSize="12" Foreground="{StaticResource GreenBrush}" Margin="0,0,16,0"/>
+                                        <TextBlock x:Name="TbRegen" Text="" Style="{StaticResource Mono}" FontSize="12" Foreground="{StaticResource Text3}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                </ctl:ResizableDataBox>
+
+                <!-- Tyre health -->
+                <ctl:ResizableDataBox WidgetId="tel-tire" Grid.Column="1" Margin="0,0,14,0">
+                <Border Style="{StaticResource Card}">
+                    <Grid>
+                        <Border Style="{StaticResource AccentBar}" Background="{StaticResource GreenBrush}"/>
+                        <StackPanel Margin="18,16">
+                            <Grid>
+                                <TextBlock Text="TIRE HEALTH" Style="{StaticResource SectionTitle}"/>
+                                <Button Style="{StaticResource PopBtn}" Content="⤢" Tag="tire" Click="PopOut_Click"/>
+                            </Grid>
+                            <UniformGrid Rows="2" Columns="2" Margin="0,12,0,0">
+                                <StackPanel Margin="0,0,16,14">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse x:Name="DotFL" Width="9" Height="9" Fill="{StaticResource GreenBrush}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="FL" FontSize="16" FontWeight="Bold" Margin="8,0,0,0"/>
+                                        <TextBlock x:Name="CmpdFL" Text="" Foreground="{StaticResource AccentBrush}" FontSize="13" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="WearFL" Text="—" Style="{StaticResource Mono}" FontSize="13" Foreground="{StaticResource Text3}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="TempFL" Text="—" Style="{StaticResource Mono}" FontSize="26" FontWeight="Bold" Margin="0,4,0,0"/>
+                                    <ProgressBar x:Name="BarFL" Maximum="100" Height="7" Margin="0,6,0,0" Background="{StaticResource BgInset}" BorderThickness="0"/>
+                                </StackPanel>
+                                <StackPanel Margin="0,0,0,14">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse x:Name="DotFR" Width="9" Height="9" Fill="{StaticResource GreenBrush}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="FR" FontSize="16" FontWeight="Bold" Margin="8,0,0,0"/>
+                                        <TextBlock x:Name="CmpdFR" Text="" Foreground="{StaticResource AccentBrush}" FontSize="13" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="WearFR" Text="—" Style="{StaticResource Mono}" FontSize="13" Foreground="{StaticResource Text3}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="TempFR" Text="—" Style="{StaticResource Mono}" FontSize="26" FontWeight="Bold" Margin="0,4,0,0"/>
+                                    <ProgressBar x:Name="BarFR" Maximum="100" Height="7" Margin="0,6,0,0" Background="{StaticResource BgInset}" BorderThickness="0"/>
+                                </StackPanel>
+                                <StackPanel Margin="0,0,16,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse x:Name="DotRL" Width="9" Height="9" Fill="{StaticResource GreenBrush}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="RL" FontSize="16" FontWeight="Bold" Margin="8,0,0,0"/>
+                                        <TextBlock x:Name="CmpdRL" Text="" Foreground="{StaticResource AccentBrush}" FontSize="13" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="WearRL" Text="—" Style="{StaticResource Mono}" FontSize="13" Foreground="{StaticResource Text3}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="TempRL" Text="—" Style="{StaticResource Mono}" FontSize="26" FontWeight="Bold" Margin="0,4,0,0"/>
+                                    <ProgressBar x:Name="BarRL" Maximum="100" Height="7" Margin="0,6,0,0" Background="{StaticResource BgInset}" BorderThickness="0"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse x:Name="DotRR" Width="9" Height="9" Fill="{StaticResource GreenBrush}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="RR" FontSize="16" FontWeight="Bold" Margin="8,0,0,0"/>
+                                        <TextBlock x:Name="CmpdRR" Text="" Foreground="{StaticResource AccentBrush}" FontSize="13" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="WearRR" Text="—" Style="{StaticResource Mono}" FontSize="13" Foreground="{StaticResource Text3}" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="TempRR" Text="—" Style="{StaticResource Mono}" FontSize="26" FontWeight="Bold" Margin="0,4,0,0"/>
+                                    <ProgressBar x:Name="BarRR" Maximum="100" Height="7" Margin="0,6,0,0" Background="{StaticResource BgInset}" BorderThickness="0"/>
+                                </StackPanel>
+                            </UniformGrid>
+                            <TextBlock x:Name="TbTireStrat" Text="—" FontSize="13" Foreground="{StaticResource GreenBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                </ctl:ResizableDataBox>
+
+                <!-- Pit window detail -->
+                <ctl:ResizableDataBox WidgetId="tel-pitwindow" Grid.Column="2">
+                <Border Style="{StaticResource Card}">
+                    <Grid>
+                        <Border Style="{StaticResource AccentBar}"/>
+                        <StackPanel Margin="18,16">
+                            <Grid>
+                                <TextBlock Text="PIT WINDOW" Style="{StaticResource SectionTitle}"/>
+                                <Button Style="{StaticResource PopBtn}" Content="⤢" Tag="pitwindow" Click="PopOut_Click"/>
+                            </Grid>
+                            <Grid Margin="0,16,0,0">
+                                <TextBlock Text="RECOMMENDED" Style="{StaticResource FieldLabel}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <TextBlock x:Name="SvPitRec" Text="—" Style="{StaticResource Mono}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Grid Margin="0,14,0,0">
+                                <TextBlock Text="EARLIEST SAFE" Style="{StaticResource FieldLabel}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <TextBlock x:Name="SvPitEarly" Text="—" Style="{StaticResource Mono}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Grid Margin="0,14,0,0">
+                                <TextBlock Text="LATEST SAFE" Style="{StaticResource FieldLabel}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <TextBlock x:Name="SvPitLate" Text="—" Style="{StaticResource Mono}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Border BorderBrush="{StaticResource Border3}" BorderThickness="0,1,0,0" Margin="0,14,0,0" Padding="0,12,0,0">
+                                <Grid>
+                                    <TextBlock Text="LIMITED BY" Style="{StaticResource FieldLabel}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                    <TextBlock x:Name="SvPitLimiter" Text="—" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AmberBrush}" HorizontalAlignment="Right"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                </ctl:ResizableDataBox>
+            </Grid>
+
+            <!-- ===== SESSION + STINT + DRIVE MODES ===== -->
+            <Grid Margin="0,12,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/><ColumnDefinition Width="1*"/><ColumnDefinition Width="1.4*"/>
+                </Grid.ColumnDefinitions>
+
+                <ctl:ResizableDataBox WidgetId="tel-session" Grid.Column="0" Margin="0,0,14,0">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel Margin="18,16">
+                        <Grid>
+                            <TextBlock Text="SESSION" Style="{StaticResource SectionTitle}"/>
+                            <Button Style="{StaticResource PopBtn}" Content="⤢" Tag="session" Click="PopOut_Click"/>
+                        </Grid>
+                        <Grid Margin="0,14,0,0">
+                            <StackPanel HorizontalAlignment="Left">
+                                <TextBlock Text="TIME REMAINING" Style="{StaticResource Caption}"/>
+                                <TextBlock x:Name="SvSessTime" Text="—" Style="{StaticResource BigNumber}" FontSize="26"/>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Right">
+                                <TextBlock Text="TOTAL LAPS EST." Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
+                                <TextBlock x:Name="SvTotLaps" Text="—" Style="{StaticResource BigNumber}" FontSize="26" HorizontalAlignment="Right"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                </ctl:ResizableDataBox>
+
+                <ctl:ResizableDataBox WidgetId="tel-stint" Grid.Column="1" Margin="0,0,14,0">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel Margin="18,16">
+                        <Grid>
+                            <TextBlock Text="STINT" Style="{StaticResource SectionTitle}"/>
+                            <Button Style="{StaticResource PopBtn}" Content="⤢" Tag="stint" Click="PopOut_Click"/>
+                        </Grid>
+                        <UniformGrid Rows="2" Columns="2" Margin="0,12,0,0">
+                            <StackPanel><TextBlock Text="STINT LAP" Style="{StaticResource Caption}"/><TextBlock x:Name="SvStintLap" Text="—" Style="{StaticResource Mono}" FontSize="18" FontWeight="Bold"/></StackPanel>
+                            <StackPanel><TextBlock Text="STINT TIME" Style="{StaticResource Caption}"/><TextBlock x:Name="SvStintTime" Text="—" Style="{StaticResource Mono}" FontSize="18" FontWeight="Bold"/></StackPanel>
+                            <StackPanel Margin="0,8,0,0"><TextBlock Text="PREDICTED" Style="{StaticResource Caption}"/><TextBlock x:Name="SvStintPred" Text="—" Style="{StaticResource Mono}" FontSize="18" FontWeight="Bold"/></StackPanel>
+                            <StackPanel Margin="0,8,0,0"><TextBlock Text="STOPS DONE" Style="{StaticResource Caption}"/><TextBlock x:Name="SvPitStops" Text="—" Style="{StaticResource Mono}" FontSize="18" FontWeight="Bold"/></StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+                </ctl:ResizableDataBox>
+
+                <ctl:ResizableDataBox WidgetId="tel-driveavg" Grid.Column="2">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel Margin="18,16">
+                        <Grid>
+                            <TextBlock Text="DRIVE MODE AVERAGES" Style="{StaticResource SectionTitle}"/>
+                            <Button Style="{StaticResource PopBtn}" Content="⤢" Tag="driveavg" Click="PopOut_Click"/>
+                        </Grid>
+                        <Grid Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="MODE" Style="{StaticResource Caption}"/>
+                            <TextBlock Grid.Column="1" Text="FUEL/LAP" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="2" Text="LAP TIME" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Border BorderBrush="{StaticResource Border3}" BorderThickness="0,1,0,0" Margin="0,8,0,8"/>
+                        <Grid Margin="0,0,0,7">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="NORMAL" Style="{StaticResource Mono}" Foreground="{StaticResource Dim2Brush}"/>
+                            <TextBlock Grid.Column="1" x:Name="DmNormal1" Text="—" Style="{StaticResource Mono}" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="2" x:Name="DmNormal2" Text="—" Style="{StaticResource Mono}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Grid Margin="0,0,0,7">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="PUSH" Style="{StaticResource Mono}" Foreground="{StaticResource PushBrush}"/>
+                            <TextBlock Grid.Column="1" x:Name="DmPush1" Text="—" Style="{StaticResource Mono}" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="2" x:Name="DmPush2" Text="—" Style="{StaticResource Mono}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="SAVE" Style="{StaticResource Mono}" Foreground="{StaticResource SaveBrush}"/>
+                            <TextBlock Grid.Column="1" x:Name="DmSave1" Text="—" Style="{StaticResource Mono}" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="2" x:Name="DmSave2" Text="—" Style="{StaticResource Mono}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <!-- fuel-strategy detail (kept for functionality) -->
+                        <Border BorderBrush="{StaticResource Border3}" BorderThickness="0,1,0,0" Margin="0,10,0,8"/>
+                        <UniformGrid Rows="1" Columns="4">
+                            <StackPanel><TextBlock Text="SAVE TGT" Style="{StaticResource Caption}"/><TextBlock x:Name="SvFuelSave" Text="—" Style="{StaticResource Mono}" FontSize="13" FontWeight="Bold"/></StackPanel>
+                            <StackPanel><TextBlock Text="MIN FINISH" Style="{StaticResource Caption}"/><TextBlock x:Name="SvFuelMin" Text="—" Style="{StaticResource Mono}" FontSize="13" FontWeight="Bold"/></StackPanel>
+                            <StackPanel><TextBlock Text="TO ADD" Style="{StaticResource Caption}"/><TextBlock x:Name="SvFuelAdd" Text="—" Style="{StaticResource Mono}" FontSize="13" FontWeight="Bold"/></StackPanel>
+                            <StackPanel><TextBlock Text="CUR AVG" Style="{StaticResource Caption}"/><TextBlock x:Name="SvFuelAvg" Text="—" Style="{StaticResource Mono}" FontSize="13" FontWeight="Bold"/></StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+                </ctl:ResizableDataBox>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

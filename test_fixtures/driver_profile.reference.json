@@ -1,0 +1,12 @@
+{
+  "Circuit_de_Barcelona": {
+    "DegOnset": 0.48,
+    "SampleStints": 3,
+    "LastUpdated": "2026-07-06T12:54:50.243082+03:00"
+  },
+  "Circuit_de_la_Sarthe": {
+    "DegOnset": 0.7,
+    "SampleStints": 5,
+    "LastUpdated": "2026-07-06T12:54:50.243082+03:00"
+  }
+}

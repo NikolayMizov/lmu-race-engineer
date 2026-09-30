@@ -1,0 +1,225 @@
+<Window x:Class="LmuRaceEngineerCS.Views.TutorialWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Quick Start"
+        Width="480" SizeToContent="Height"
+        WindowStyle="None" AllowsTransparency="True"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent">
+
+    <Border Background="{StaticResource BgBrush}"
+            BorderBrush="{StaticResource BorderBrush2}"
+            BorderThickness="1"
+            CornerRadius="4">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="36"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title bar -->
+            <Border Grid.Row="0"
+                    Background="#181818"
+                    CornerRadius="4,4,0,0"
+                    MouseDown="TitleBar_MouseDown">
+                <Grid Margin="14,0,8,0">
+                    <TextBlock Text="LMU RACE ENGINEER  ·  QUICK START"
+                               FontFamily="Consolas" FontSize="11"
+                               Foreground="{StaticResource DimBrush}"
+                               VerticalAlignment="Center"/>
+                    <Button Content="✕"
+                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Background="Transparent" BorderThickness="0"
+                            Foreground="{StaticResource DimBrush}"
+                            FontSize="12" Padding="6,2"
+                            Cursor="Hand"
+                            Click="Close_Click"/>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <StackPanel Grid.Row="1" Margin="20,16,20,20">
+
+                <!-- RADIO ALERTS section -->
+                <TextBlock Text="RADIO ALERTS"
+                           FontFamily="Consolas" FontSize="11" FontWeight="Bold"
+                           Foreground="{StaticResource AccentBrush}"
+                           Margin="0,0,0,8"/>
+
+                <TextBlock Text="Your engineer speaks these lines automatically:"
+                           FontFamily="Segoe UI" FontSize="13"
+                           Foreground="{StaticResource DimBrush}"
+                           Margin="0,0,0,10"/>
+
+                <!-- Lap invalid -->
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="⚠" Foreground="{StaticResource YellowBrush}"
+                               FontSize="13" VerticalAlignment="Top" Margin="0,1,0,0"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock FontFamily="Consolas" FontSize="13"
+                                   Foreground="{StaticResource FgBrush}">
+                            <Run Text='"'/><Run Text="Lap invalidated." Foreground="{StaticResource YellowBrush}"/><Run Text='"'/>
+                        </TextBlock>
+                        <TextBlock Text="Triggered when your current lap is invalidated."
+                                   FontFamily="Segoe UI" FontSize="12"
+                                   Foreground="{StaticResource DimBrush}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Track limit -->
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="⚠" Foreground="{StaticResource YellowBrush}"
+                               FontSize="13" VerticalAlignment="Top" Margin="0,1,0,0"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock FontFamily="Consolas" FontSize="13"
+                                   Foreground="{StaticResource FgBrush}">
+                            <Run Text='"'/><Run Text="One more track limit will cause a penalty." Foreground="{StaticResource YellowBrush}"/><Run Text='"'/>
+                        </TextBlock>
+                        <TextBlock Text="Triggered when you're one warning away from a penalty."
+                                   FontFamily="Segoe UI" FontSize="12"
+                                   Foreground="{StaticResource DimBrush}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- You are leading -->
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="⚠" Foreground="{StaticResource YellowBrush}"
+                               FontSize="13" VerticalAlignment="Top" Margin="0,1,0,0"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock FontFamily="Consolas" FontSize="13"
+                                   Foreground="{StaticResource FgBrush}">
+                            <Run Text='"'/><Run Text="You are leading your class." Foreground="{StaticResource YellowBrush}"/><Run Text='"'/>
+                        </TextBlock>
+                        <TextBlock Text="Triggered when you move into P1 in your class."
+                                   FontFamily="Segoe UI" FontSize="12"
+                                   Foreground="{StaticResource DimBrush}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Divider -->
+                <Rectangle Height="1" Fill="{StaticResource BorderBrush2}" Margin="0,14,0,14"/>
+
+                <!-- DRIVE MODE section -->
+                <TextBlock Text="DRIVE MODE"
+                           FontFamily="Consolas" FontSize="11" FontWeight="Bold"
+                           Foreground="{StaticResource AccentBrush}"
+                           Margin="0,0,0,8"/>
+
+                <TextBlock Text="Use the PUSH / SAVE / NORMAL buttons in the Strategy Mode widget (Telemetry tab) or pop-out overlay to switch modes. Your engineer confirms each change:"
+                           FontFamily="Segoe UI" FontSize="13"
+                           Foreground="{StaticResource DimBrush}"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,10"/>
+
+                <!-- Push -->
+                <Grid Margin="0,0,0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="▶" Foreground="{StaticResource RedBrush}"
+                               FontSize="11" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" FontFamily="Consolas" FontSize="13"
+                               Foreground="{StaticResource FgBrush}">
+                        <Run Text='"'/><Run Text="Push mode activated." Foreground="{StaticResource RedBrush}"/><Run Text='"'/>
+                        <Run Text=" → " Foreground="{StaticResource DimBrush}"/>
+                        <Run Text="click PUSH" Foreground="{StaticResource Dim2Brush}"/>
+                    </TextBlock>
+                </Grid>
+
+                <!-- Save -->
+                <Grid Margin="0,0,0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="▶" Foreground="{StaticResource GreenBrush}"
+                               FontSize="11" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" FontFamily="Consolas" FontSize="13"
+                               Foreground="{StaticResource FgBrush}">
+                        <Run Text='"'/><Run Text="Save mode activated." Foreground="{StaticResource GreenBrush}"/><Run Text='"'/>
+                        <Run Text=" → " Foreground="{StaticResource DimBrush}"/>
+                        <Run Text="click SAVE" Foreground="{StaticResource Dim2Brush}"/>
+                    </TextBlock>
+                </Grid>
+
+                <!-- Normal -->
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="▶" Foreground="{StaticResource DimBrush}"
+                               FontSize="11" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" FontFamily="Consolas" FontSize="13"
+                               Foreground="{StaticResource FgBrush}">
+                        <Run Text='"'/><Run Text="Back to normal mode." Foreground="{StaticResource Dim2Brush}"/><Run Text='"'/>
+                        <Run Text=" → " Foreground="{StaticResource DimBrush}"/>
+                        <Run Text="click NORMAL" Foreground="{StaticResource Dim2Brush}"/>
+                    </TextBlock>
+                </Grid>
+
+                <!-- Divider -->
+                <Rectangle Height="1" Fill="{StaticResource BorderBrush2}" Margin="0,14,0,14"/>
+
+                <!-- TEST RADIO section -->
+                <TextBlock Text="TEST YOUR RADIO"
+                           FontFamily="Consolas" FontSize="11" FontWeight="Bold"
+                           Foreground="{StaticResource AccentBrush}"
+                           Margin="0,0,0,8"/>
+
+                <Grid Margin="0,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="▶" Foreground="{StaticResource GreenBrush}"
+                               FontSize="11" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" FontFamily="Consolas" FontSize="13"
+                               Foreground="{StaticResource FgBrush}">
+                        <Run Text='"'/><Run Text="Loud and clear." Foreground="{StaticResource GreenBrush}"/><Run Text='"'/>
+                        <Run Text=" → " Foreground="{StaticResource DimBrush}"/>
+                        <Run Text="Voice tab → Radio Check" Foreground="{StaticResource Dim2Brush}"/>
+                    </TextBlock>
+                </Grid>
+
+                <!-- Divider -->
+                <Rectangle Height="1" Fill="{StaticResource BorderBrush2}" Margin="0,16,0,14"/>
+
+                <!-- Footer row -->
+                <Grid>
+                    <CheckBox x:Name="ChkDontShow"
+                              Content="Don't show again"
+                              FontFamily="Segoe UI" FontSize="13"
+                              Foreground="{StaticResource DimBrush}"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Left"/>
+
+                    <Button Content="Got it"
+                            HorizontalAlignment="Right"
+                            Width="90" Height="30"
+                            Background="{StaticResource AccentBrush}"
+                            Foreground="White"
+                            BorderThickness="0"
+                            FontFamily="Consolas" FontSize="13"
+                            Cursor="Hand"
+                            Click="GotIt_Click"/>
+                </Grid>
+
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

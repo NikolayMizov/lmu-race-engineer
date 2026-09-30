@@ -1,0 +1,507 @@
+<Window x:Class="LmuSimulator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LMU Data Simulator" Width="520" Height="820"
+        ResizeMode="CanResizeWithGrip"
+        Background="#1a1a1a" Foreground="White"
+        FontFamily="Segoe UI" FontSize="12"
+        Closing="Window_Closing">
+
+    <Window.Resources>
+        <!-- ── Expander card ─────────────────────────────────────────────── -->
+        <Style x:Key="DarkExpander" TargetType="Expander">
+            <Setter Property="Background"      Value="#252525"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="BorderBrush"     Value="#333"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin"          Value="0,0,0,6"/>
+            <Setter Property="Padding"         Value="10,8"/>
+        </Style>
+
+        <!-- ── Scenario button ───────────────────────────────────────────── -->
+        <Style x:Key="ScenBtn" TargetType="Button">
+            <Setter Property="Background"      Value="#2e2e2e"/>
+            <Setter Property="Foreground"      Value="#c7c7c7"/>
+            <Setter Property="BorderBrush"     Value="#444"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding"         Value="0,7"/>
+            <Setter Property="Margin"          Value="3"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background"  Value="#3a3a3a"/>
+                                <Setter Property="BorderBrush" Value="#0078d4"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#0078d4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── Action button ─────────────────────────────────────────────── -->
+        <Style x:Key="ActBtn" TargetType="Button">
+            <Setter Property="Background"      Value="#0078d4"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding"         Value="14,6"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1a90e8"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#3a3a3a"/>
+                                <Setter Property="Foreground" Value="#666"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── Slider ────────────────────────────────────────────────────── -->
+        <Style TargetType="Slider">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- ── ComboBox ──────────────────────────────────────────────────── -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background"  Value="#333"/>
+            <Setter Property="Foreground"  Value="White"/>
+            <Setter Property="BorderBrush" Value="#444"/>
+        </Style>
+    </Window.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Background="#1a1a1a">
+        <StackPanel Margin="14,10,14,16">
+
+            <!-- ── Title row ─────────────────────────────────────────────── -->
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="LMU Data Simulator" FontSize="17" FontWeight="SemiBold"/>
+                    <TextBlock Text="Writes synthetic data to the LMU_Data shared memory block"
+                               Foreground="#666" FontSize="10" Margin="0,2,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse x:Name="StatusDot" Width="9" Height="9" Fill="#ef4444" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="StatusTxt" Text="Idle" Margin="6,0,0,0"
+                               Foreground="#aaa" VerticalAlignment="Center" FontSize="11"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- ── Control toolbar ───────────────────────────────────────── -->
+            <Border Background="#252525" CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="BtnCreate" Content="Create MMF" Style="{StaticResource ActBtn}"
+                            Click="BtnCreate_Click" Margin="0,0,8,0"/>
+                    <Button x:Name="BtnAutoToggle" Content="▶ Auto" Style="{StaticResource ActBtn}"
+                            Click="BtnAutoToggle_Click" IsEnabled="False" Margin="0,0,8,0"
+                            Background="#1e6b2e"/>
+                    <Button x:Name="BtnNextLap" Content="Next Lap" Style="{StaticResource ActBtn}"
+                            Click="BtnNextLap_Click" IsEnabled="False" Background="#444" Margin="0,0,12,0"/>
+                    <TextBlock Text="Speed:" Foreground="#aaa" VerticalAlignment="Center" FontSize="11"/>
+                    <ComboBox x:Name="SpeedBox" SelectedIndex="1" Margin="6,0,0,0" Width="82" FontSize="11">
+                        <ComboBoxItem Content="1× (90 s)"/>
+                        <ComboBoxItem Content="5× (18 s)"/>
+                        <ComboBoxItem Content="10× (9 s)"/>
+                        <ComboBoxItem Content="30× (3 s)"/>
+                    </ComboBox>
+                </StackPanel>
+            </Border>
+
+            <!-- ── CSV replay ────────────────────────────────────────────── -->
+            <Border Background="#252525" CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="BtnLoadCsv" Content="⤢ Load CSV Replay" Style="{StaticResource ActBtn}"
+                            Click="BtnLoadCsv_Click" Background="#6b4b1e" Margin="0,0,8,0"/>
+                    <Button x:Name="BtnClearReplay" Content="Clear" Style="{StaticResource ScenBtn}"
+                            Click="BtnClearReplay_Click" Width="66" Margin="0,0,10,0"/>
+                    <TextBlock x:Name="ReplayStatus" Text="No replay loaded — using scenarios / sliders"
+                               Foreground="#aaa" VerticalAlignment="Center" FontSize="11"
+                               TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ── Scenarios ─────────────────────────────────────────────── -->
+            <TextBlock Text="SCENARIOS" Foreground="#555" FontSize="10" FontWeight="Bold" Margin="2,0,0,4"/>
+            <UniformGrid Columns="3" Margin="0,0,0,8">
+                <Button Content="Fresh Race"  Tag="fresh"     Style="{StaticResource ScenBtn}" Click="Scenario_Click"/>
+                <Button Content="Mid Stint"   Tag="mid"       Style="{StaticResource ScenBtn}" Click="Scenario_Click"/>
+                <Button Content="Low Fuel"    Tag="lowfuel"   Style="{StaticResource ScenBtn}" Click="Scenario_Click"/>
+                <Button Content="Rain Hits"   Tag="rain"      Style="{StaticResource ScenBtn}" Click="Scenario_Click"/>
+                <Button Content="Tire Cliff"  Tag="tirecliff" Style="{StaticResource ScenBtn}" Click="Scenario_Click"/>
+                <Button Content="Wet Race"    Tag="wet"       Style="{StaticResource ScenBtn}" Click="Scenario_Click"/>
+            </UniformGrid>
+
+            <!-- ── Live state ─────────────────────────────────────────────── -->
+            <Border Background="#252525" CornerRadius="6" Padding="12,8" Margin="0,0,0,8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="LAP" Foreground="#555" FontSize="9"/>
+                        <TextBlock x:Name="DispLap" Text="—" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="VE %" Foreground="#555" FontSize="9"/>
+                        <TextBlock x:Name="DispVe" Text="—" FontSize="20" FontWeight="Bold" Foreground="#22c55e"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="WEAR %" Foreground="#555" FontSize="9"/>
+                        <TextBlock x:Name="DispWear" Text="—" FontSize="20" FontWeight="Bold" Foreground="#f59e0b"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <TextBlock Text="RAIN" Foreground="#555" FontSize="9"/>
+                        <TextBlock x:Name="DispRain" Text="—" FontSize="20" FontWeight="Bold" Foreground="#60a5fa"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="4">
+                        <TextBlock Text="TREND" Foreground="#555" FontSize="9"/>
+                        <TextBlock x:Name="DispTrend" Text="—" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="#a78bfa" VerticalAlignment="Center" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!--  EXPANDER 1 — Race Position                                -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <Expander Header="RACE POSITION" Style="{StaticResource DarkExpander}" IsExpanded="True">
+                <StackPanel Margin="0,6,0,0">
+                    <!-- Lap -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Current Lap" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldLap" Grid.Column="1" Minimum="1" Maximum="60"
+                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                ValueChanged="SldLap_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldLapVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Max laps -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Max Laps" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldMaxLaps" Grid.Column="1" Minimum="10" Maximum="100"
+                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                ValueChanged="SldMaxLaps_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldMaxLapsVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Gap Front -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Gap Front (s)" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldGapF" Grid.Column="1" Minimum="0" Maximum="30"
+                                ValueChanged="SldGapF_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldGapFVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Gap Behind -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Gap Behind (s)" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldGapB" Grid.Column="1" Minimum="0" Maximum="30"
+                                ValueChanged="SldGapB_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldGapBVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Pit stops -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Pit Stops Done" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldPitStops" Grid.Column="1" Minimum="0" Maximum="5"
+                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                ValueChanged="SldPitStops_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldPitStopsVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Pit controls -->
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,2">
+                        <Button Content="Enter Pits" Tag="enter" Click="PitBtn_Click"
+                                Style="{StaticResource ScenBtn}" Width="90"/>
+                        <Button Content="Exit Pits"  Tag="exit"  Click="PitBtn_Click"
+                                Style="{StaticResource ScenBtn}" Width="90"/>
+                        <CheckBox x:Name="ChkLapInvalid" Content="Lap Invalidated"
+                                  Foreground="#ccc" VerticalAlignment="Center" Margin="12,0,0,0"
+                                  Checked="ChkLapInvalid_Changed" Unchecked="ChkLapInvalid_Changed"/>
+                    </StackPanel>
+                </StackPanel>
+            </Expander>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!--  EXPANDER 2 — Energy &amp; Tires                           -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <Expander Header="ENERGY &amp; TIRES" Style="{StaticResource DarkExpander}" IsExpanded="True">
+                <StackPanel Margin="0,6,0,0">
+                    <!-- VE -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Virtual Energy %" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldVe" Grid.Column="1" Minimum="0" Maximum="100"
+                                ValueChanged="SldVe_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldVeVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#22c55e" TextAlignment="Right" FontWeight="SemiBold"/>
+                    </Grid>
+                    <!-- Fuel/lap -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Fuel per Lap %" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldFuelRate" Grid.Column="1" Minimum="0.5" Maximum="6"
+                                ValueChanged="SldFuelRate_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldFuelRateVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Tire wear -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Tire Wear %" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldWear" Grid.Column="1" Minimum="0" Maximum="100"
+                                ValueChanged="SldWear_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldWearVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#f59e0b" TextAlignment="Right" FontWeight="SemiBold"/>
+                    </Grid>
+                    <!-- Wear/lap -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Wear per Lap %" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldWearRate" Grid.Column="1" Minimum="0.3" Maximum="6"
+                                ValueChanged="SldWearRate_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldWearRateVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Brake temp -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Brake Temp °C" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldBrake" Grid.Column="1" Minimum="100" Maximum="900"
+                                ValueChanged="SldBrake_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldBrakeVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                </StackPanel>
+            </Expander>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!--  EXPANDER 3 — Weather &amp; Track                          -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <Expander Header="WEATHER &amp; TRACK" Style="{StaticResource DarkExpander}" IsExpanded="True">
+                <StackPanel Margin="0,6,0,0">
+                    <!-- Rain intensity -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Rain Intensity" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldRain" Grid.Column="1" Minimum="0" Maximum="1"
+                                ValueChanged="SldRain_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldRainVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#60a5fa" TextAlignment="Right" FontWeight="SemiBold"/>
+                    </Grid>
+                    <!-- Avg path wetness -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Track Wetness" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldWetness" Grid.Column="1" Minimum="0" Maximum="1"
+                                ValueChanged="SldWetness_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldWetnessVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Dark cloud -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Dark Cloud" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldCloud" Grid.Column="1" Minimum="0" Maximum="1"
+                                ValueChanged="SldCloud_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldCloudVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Track temp -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Track Temp °C" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldTrackTemp" Grid.Column="1" Minimum="5" Maximum="65"
+                                ValueChanged="SldTrackTemp_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldTrackTempVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Ambient temp -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Ambient Temp °C" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldAmbTemp" Grid.Column="1" Minimum="0" Maximum="42"
+                                ValueChanged="SldAmbTemp_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldAmbTempVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Track grip -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Track Grip %" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldGrip" Grid.Column="1" Minimum="30" Maximum="100"
+                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                ValueChanged="SldGrip_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldGripVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Rain trend -->
+                    <Grid Margin="0,6,0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Rain Trend" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <ComboBox x:Name="CboRainTrend" Grid.Column="1" Margin="8,0,0,0"
+                                  SelectionChanged="CboRainTrend_Changed">
+                            <ComboBoxItem Content="Static (no change)"/>
+                            <ComboBoxItem Content="Getting Wetter ↑"/>
+                            <ComboBoxItem Content="Drying ↓"/>
+                        </ComboBox>
+                    </Grid>
+                    <!-- Rain rate -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Rain Rate / Lap" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldRainRate" Grid.Column="1" Minimum="0.01" Maximum="0.15"
+                                ValueChanged="SldRainRate_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldRainRateVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                </StackPanel>
+            </Expander>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!--  EXPANDER 4 — Lap Times &amp; Sim Params                   -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <Expander Header="LAP TIMES &amp; SIM PARAMS" Style="{StaticResource DarkExpander}" IsExpanded="False">
+                <StackPanel Margin="0,6,0,0">
+                    <!-- Lap time (nominal) -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="54"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Lap Time (s)" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldLapTime" Grid.Column="1" Minimum="60" Maximum="150"
+                                ValueChanged="SldLapTime_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldLapTimeVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Last lap -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="54"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Last Lap (s)" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldLastLap" Grid.Column="1" Minimum="60" Maximum="150"
+                                ValueChanged="SldLastLap_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldLastLapVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Best lap -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="54"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Best Lap (s)" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldBestLap" Grid.Column="1" Minimum="60" Maximum="150"
+                                ValueChanged="SldBestLap_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldBestLapVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Delta best -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="54"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Delta Best (s)" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldDelta" Grid.Column="1" Minimum="-3" Maximum="3"
+                                ValueChanged="SldDelta_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldDeltaVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Lap time jitter -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="54"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Lap Jitter (±s)" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldJitter" Grid.Column="1" Minimum="0" Maximum="2"
+                                ValueChanged="SldJitter_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldJitterVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                    <!-- Gap jitter -->
+                    <Grid Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/><ColumnDefinition Width="*"/><ColumnDefinition Width="54"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Gap Jitter (±s)" VerticalAlignment="Center" Foreground="#ccc"/>
+                        <Slider x:Name="SldGapJitter" Grid.Column="1" Minimum="0" Maximum="2"
+                                ValueChanged="SldGapJitter_Changed" Margin="8,0"/>
+                        <TextBlock x:Name="SldGapJitterVal" Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="#aaa" TextAlignment="Right"/>
+                    </Grid>
+                </StackPanel>
+            </Expander>
+
+        </StackPanel>
+    </ScrollViewer>
+</Window>

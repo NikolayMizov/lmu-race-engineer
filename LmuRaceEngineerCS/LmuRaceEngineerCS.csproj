@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>LmuRaceEngineer</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
+    <PackageReference Include="System.Speech" Version="10.0.7" />
+  </ItemGroup>
+
+  <!-- Embed the Apex HUD fonts (Saira Condensed + JetBrains Mono) into the assembly so
+       they ship inside the single-file exe and render with no install on the target PC.
+       Drop the STATIC .ttf files into the Fonts/ folder; the pack:// URIs in
+       Themes/ApexTheme.xaml resolve them by internal family name, selecting weight via
+       FontWeight. Variable fonts (*VariableFont*.ttf) are excluded — WPF has poor
+       variable-font support and a variable "JetBrains Mono" would collide with the static
+       Regular/Bold faces. Falls back to Segoe UI / Consolas if a family is absent. -->
+  <ItemGroup>
+    <Resource Include="Fonts\*.ttf" Exclude="Fonts\*VariableFont*.ttf" />
+  </ItemGroup>
+
+</Project>

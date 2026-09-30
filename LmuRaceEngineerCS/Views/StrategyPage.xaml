@@ -1,0 +1,210 @@
+<UserControl x:Class="LmuRaceEngineerCS.Views.StrategyPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:LmuRaceEngineerCS.Controls"
+             Background="{StaticResource BgApp}">
+
+    <UserControl.Resources>
+        <Style x:Key="PanelKey" TargetType="TextBlock" BasedOn="{StaticResource FieldLabel}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="PanelVal" TargetType="TextBlock" BasedOn="{StaticResource Mono}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+        <!-- Pop-out affordance (matches TelemetryPage) -->
+        <Style x:Key="PopBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="6,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="ToolTip" Value="Pop out to a window"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20,8,20,16">
+
+            <!-- ── Strategy hero ────────────────────────────────────────────── -->
+            <ctl:ResizableDataBox WidgetId="strat-hero">
+            <Border Style="{StaticResource Card}" Background="{StaticResource RedWash}">
+                <Grid>
+                    <Border Style="{StaticResource AccentBar}" Background="{StaticResource RedBrush}" Effect="{StaticResource RedGlow}"/>
+                    <StackPanel Margin="22,18">
+                        <Grid>
+                            <TextBlock Text="STRATEGY" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock x:Name="TbStratComputedAt" Text="" Style="{StaticResource Caption}"
+                                       HorizontalAlignment="Right" Margin="0,0,26,0"/>
+                            <Button Style="{StaticResource PopBtn}" Content="⤢" Tag="strat-rec" Click="PopOut_Click"/>
+                        </Grid>
+                        <Grid Margin="0,10,0,0">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock x:Name="TbStratAction" Text="—" FontSize="30" FontWeight="Bold" FontStyle="Italic"/>
+                                <TextBlock x:Name="TbStratRationale" Text="" Foreground="{StaticResource Text3}" FontSize="14" TextWrapping="Wrap" MaxWidth="640" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                <StackPanel Margin="0,0,34,0">
+                                    <TextBlock Text="PIT LAP" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="TbStratPitLap" Text="—" Style="{StaticResource BigNumber}" FontSize="24" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                                <StackPanel Margin="0,0,34,0">
+                                    <TextBlock Text="UNCERTAINTY ±s" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="TbStratUncertainty" Text="—" Style="{StaticResource BigNumber}" FontSize="24" Foreground="{StaticResource AmberBrush}" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="CONFIDENCE" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="TbStratConfidence" Text="—" Style="{StaticResource BigNumber}" FontSize="24" Foreground="{StaticResource GreenBrush}" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            </ctl:ResizableDataBox>
+
+            <!-- ── Three intel panels ───────────────────────────────────────── -->
+            <Grid Margin="0,12,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <ctl:ResizableDataBox WidgetId="strat-pitwindow" Grid.Column="0" Margin="0,0,14,0">
+                <Border Style="{StaticResource Card}">
+                    <Grid>
+                        <Border Style="{StaticResource AccentBar}"/>
+                        <StackPanel Margin="18,16">
+                            <Grid>
+                                <TextBlock Text="PIT WINDOW" Style="{StaticResource SectionTitle}"/>
+                                <Button Style="{StaticResource PopBtn}" Content="⤢" Tag="strat-pitwin" Click="PopOut_Click"/>
+                            </Grid>
+                            <Grid Margin="0,12,0,0">
+                                <TextBlock Text="Recommended" Style="{StaticResource PanelKey}"/>
+                                <TextBlock x:Name="TbPitRecommended" Text="—" Style="{StaticResource PanelVal}" FontSize="18" Foreground="{StaticResource AccentBrush}"/>
+                            </Grid>
+                            <Grid Margin="0,11,0,0">
+                                <TextBlock Text="Earliest" Style="{StaticResource PanelKey}"/>
+                                <TextBlock x:Name="TbPitEarliest" Text="—" Style="{StaticResource PanelVal}"/>
+                            </Grid>
+                            <Grid Margin="0,11,0,0">
+                                <TextBlock Text="Latest" Style="{StaticResource PanelKey}"/>
+                                <TextBlock x:Name="TbPitLatest" Text="—" Style="{StaticResource PanelVal}"/>
+                            </Grid>
+                            <Grid Margin="0,11,0,0">
+                                <TextBlock Text="Limited by" Style="{StaticResource PanelKey}"/>
+                                <TextBlock x:Name="TbPitLimiter" Text="—" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AmberBrush}" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                </ctl:ResizableDataBox>
+
+                <ctl:ResizableDataBox WidgetId="strat-projections" Grid.Column="1" Margin="0,0,14,0">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel Margin="18,16">
+                        <Grid>
+                            <TextBlock Text="PROJECTIONS" Style="{StaticResource SectionTitle}"/>
+                            <Button Style="{StaticResource PopBtn}" Content="⤢" Tag="strat-proj" Click="PopOut_Click"/>
+                        </Grid>
+                        <Grid Margin="0,12,0,0">
+                            <TextBlock Text="Finish position" Style="{StaticResource PanelKey}"/>
+                            <TextBlock x:Name="TbProjPosition" Text="—" Style="{StaticResource PanelVal}" FontSize="18" Foreground="{StaticResource GreenBrush}"/>
+                        </Grid>
+                        <Grid Margin="0,11,0,0">
+                            <TextBlock Text="Fuel margin" Style="{StaticResource PanelKey}"/>
+                            <TextBlock x:Name="TbProjFuelMargin" Text="—" Style="{StaticResource PanelVal}" Foreground="{StaticResource GreenBrush}"/>
+                        </Grid>
+                        <Grid Margin="0,11,0,0">
+                            <TextBlock Text="Tire cliff risk" Style="{StaticResource PanelKey}"/>
+                            <TextBlock x:Name="TbProjCliffRisk" Text="—" Style="{StaticResource PanelVal}" Foreground="{StaticResource GreenBrush}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                </ctl:ResizableDataBox>
+
+                <ctl:ResizableDataBox WidgetId="strat-rival" Grid.Column="2">
+                <Border Style="{StaticResource Card}">
+                    <Grid>
+                        <Border Style="{StaticResource AccentBar}" Background="{StaticResource RedBrush}"/>
+                        <StackPanel Margin="18,16">
+                            <Grid>
+                                <TextBlock Text="RIVAL INTEL" Style="{StaticResource SectionTitle}"/>
+                                <Button Style="{StaticResource PopBtn}" Content="⤢" Tag="strat-rival" Click="PopOut_Click"/>
+                            </Grid>
+                            <Grid Margin="0,12,0,0">
+                                <TextBlock Text="Nearest rival" Style="{StaticResource PanelKey}"/>
+                                <TextBlock x:Name="TbRivalGap" Text="—" Style="{StaticResource PanelVal}"/>
+                            </Grid>
+                            <Grid Margin="0,11,0,0">
+                                <TextBlock Text="Rival pit (est.)" Style="{StaticResource PanelKey}"/>
+                                <TextBlock x:Name="TbRivalPitLap" Text="—" Style="{StaticResource PanelVal}"/>
+                            </Grid>
+                            <Grid Margin="0,11,0,0">
+                                <TextBlock Text="Undercut threat" Style="{StaticResource PanelKey}"/>
+                                <TextBlock x:Name="TbUndercutThreat" Text="—" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AmberBrush}" HorizontalAlignment="Right"/>
+                            </Grid>
+                            <Grid Margin="0,11,0,0">
+                                <TextBlock Text="Overcut window" Style="{StaticResource PanelKey}"/>
+                                <TextBlock x:Name="TbOvercutOpp" Text="—" FontSize="16" FontWeight="Bold" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                </ctl:ResizableDataBox>
+            </Grid>
+
+            <!-- ── Candidates ───────────────────────────────────────────────── -->
+            <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                <StackPanel Margin="18,16">
+                    <TextBlock Text="ALL CANDIDATES (ranked best → worst)" Style="{StaticResource SectionTitle}"/>
+                    <Grid Margin="0,12,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="130"/><ColumnDefinition Width="70"/><ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="80"/><ColumnDefinition Width="80"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="ACTION" Style="{StaticResource Caption}"/>
+                        <TextBlock Grid.Column="1" Text="PIT LAP" Style="{StaticResource Caption}"/>
+                        <TextBlock Grid.Column="2" Text="SCORE" Style="{StaticResource Caption}"/>
+                        <TextBlock Grid.Column="3" Text="FUEL" Style="{StaticResource Caption}"/>
+                        <TextBlock Grid.Column="4" Text="CLIFF" Style="{StaticResource Caption}"/>
+                        <TextBlock Grid.Column="5" Text="RATIONALE" Style="{StaticResource Caption}"/>
+                    </Grid>
+                    <Border BorderBrush="{StaticResource Border3}" BorderThickness="0,1,0,0" Margin="0,0,0,8"/>
+                    <StackPanel x:Name="SpCandidates"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ── Current pace ─────────────────────────────────────────────── -->
+            <ctl:ResizableDataBox WidgetId="strat-currentpace" Margin="0,12,0,0">
+            <Border Style="{StaticResource Card}">
+                <StackPanel Margin="18,16">
+                    <TextBlock Text="CURRENT PACE" Style="{StaticResource SectionTitle}"/>
+                    <UniformGrid Rows="1" Columns="6" Margin="0,14,0,0">
+                        <StackPanel><TextBlock Text="AVG LAP" Style="{StaticResource Caption}"/><TextBlock x:Name="TbInputAvgLap" Text="—" Style="{StaticResource Mono}" FontSize="20" FontWeight="Bold"/></StackPanel>
+                        <StackPanel><TextBlock Text="AVG FUEL/LAP" Style="{StaticResource Caption}"/><TextBlock x:Name="TbInputAvgFuel" Text="—" Style="{StaticResource Mono}" FontSize="20" FontWeight="Bold"/></StackPanel>
+                        <StackPanel><TextBlock Text="TIRE HEALTH" Style="{StaticResource Caption}"/><TextBlock x:Name="TbInputWear" Text="—" Style="{StaticResource Mono}" FontSize="20" FontWeight="Bold" Foreground="{StaticResource GreenBrush}"/></StackPanel>
+                        <StackPanel><TextBlock Text="COMPOUND" Style="{StaticResource Caption}"/><TextBlock x:Name="TbInputCompound" Text="—" Style="{StaticResource Mono}" FontSize="20" FontWeight="Bold" Foreground="{StaticResource AmberBrush}"/></StackPanel>
+                        <StackPanel><TextBlock Text="STINT LAPS" Style="{StaticResource Caption}"/><TextBlock x:Name="TbInputStint" Text="—" Style="{StaticResource Mono}" FontSize="20" FontWeight="Bold"/></StackPanel>
+                        <StackPanel><TextBlock Text="LAPS LEFT" Style="{StaticResource Caption}"/><TextBlock x:Name="TbInputLapsLeft" Text="—" Style="{StaticResource Mono}" FontSize="20" FontWeight="Bold"/></StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+            </ctl:ResizableDataBox>
+
+            <!-- ── Historical pace (per mode) ───────────────────────────────── -->
+            <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                <StackPanel Margin="18,16">
+                    <Grid>
+                        <TextBlock Text="HISTORICAL PACE" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock x:Name="TbHistLabel" Text="" Style="{StaticResource Caption}" HorizontalAlignment="Right"/>
+                    </Grid>
+                    <StackPanel x:Name="SpHistoricalRows" Margin="0,12,0,0"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

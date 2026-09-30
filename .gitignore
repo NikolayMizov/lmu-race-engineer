@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+publish/
+*.user
+*.suo
+__pycache__/
+*.pyc
+
+# runtime files written next to the exe
+settings.json
+layout.json
+driver_profile.json
+audio_cache/
+/laps/

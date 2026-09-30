@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>LmuSimulator</AssemblyName>
+    <RootNamespace>LmuSimulator</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Share LmuStructs from the main project without copying the file -->
+    <Compile Include="..\LmuRaceEngineerCS\Shared\LmuStructs.cs"
+             Link="Shared\LmuStructs.cs" />
+  </ItemGroup>
+</Project>
